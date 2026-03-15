@@ -3,11 +3,11 @@ Description=Gunicorn instance to serve my site
 After=network.target
 
 [Service]
-User=andrey
+User=andrey_kalashnikov_am
 Group=www-data
-WorkingDirectory=/home/andrey/site
-Environment="PATH=/home/andrey/site/venv/bin"
-ExecStart=/home/andrey/site/venv/bin/gunicorn --workers 3 --bind unix:app.sock -m 007 app:app
+WorkingDirectory=/home/andrey_kalashnikov_am/website
+Environment="PATH=/home/andrey_kalashnikov_am/website/venv/bin"
+ExecStart=/home/andrey_kalashnikov_am/website/venv/bin/gunicorn --workers 3 --bind unix:app.sock -m 007 app:app
 
 [Install]
 WantedBy=multi-user.target
