@@ -98,15 +98,21 @@ header h1 {
 }
 
 .btn-yandex {
-    background-color: #ffcc00;
+    background-color: #ffffff;
     color: #000000 !important;
-    border: 1px solid #f2c200;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-yandex .yandex-logo {
+    fill: #ff0000;
 }
 
 .btn-yandex:hover {
-    background-color: #f2c200;
+    background-color: #ffffff;
+    border-color: #ff0000;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(255, 204, 0, 0.3);
+    box-shadow: 0 4px 12px rgba(255, 0, 0, 0.1);
 }
 
 .btn-logout {
