@@ -98,21 +98,17 @@ header h1 {
 }
 
 .btn-yandex {
-    background-color: #ffffff;
+    background-color: #ffcc00 !important;
     color: #000000 !important;
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow-sm);
-}
-
-.btn-yandex .yandex-logo {
-    fill: #ff0000;
+    border: 1px solid #f2c200 !important;
+    padding: 10px 24px !important;
+    font-size: 1rem !important;
 }
 
 .btn-yandex:hover {
-    background-color: #ffffff;
-    border-color: #ff0000;
+    background-color: #f2c200 !important;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(255, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(255, 204, 0, 0.3) !important;
 }
 
 .btn-logout {
