@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Моя Визитка</title>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-XXXXXXX');</script>
+    <!-- End Google Tag Manager -->
+
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript" >
+       (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+       m[i].l=1*new Date();
+       for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+       k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+       (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+    
+       ym(12345678, "init", {
+            clickmap:true,
+            trackLinks:true,
+            accurateTrackBounce:true
+       });
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/12345678" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXXX"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <header class="minimal-header">
+        <div class="container">
+            <h1>Andrey<span style="color: var(--accent);">.</span></h1>
+            <nav class="auth-nav">
+                {% if session.get('user') %}
+                    <span class="user-greeting">Привет, {{ session['user']['username'] }}!</span>
+                    <a href="{{ url_for('logout') }}" class="btn-auth btn-logout">Выйти</a>
+                {% else %}
+                    <a href="{{ url_for('login', provider_name='github') }}" class="btn-auth btn-github">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                        <span>GitHub</span>
+                    </a>
+                    <a href="{{ url_for('login', provider_name='vk') }}" class="btn-auth btn-vk">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M15.684 0H8.316C1.592 0 0 1.63 0 8.516v6.968C0 22.37 1.592 24 8.316 24h7.368C22.408 24 24 22.37 24 15.484V8.516C24 1.63 22.408 0 15.684 0zm2.632 17.577h-1.232c-.88 0-1.423-.717-3.28-2.628-.352-.352-.704-.616-1.127-.616-.192 0-.464.128-.464.768v1.936c0 .544-.176.816-.944.816-3.488 0-6.72-3.792-6.72-8.8 0-.256.096-.496.528-.496h1.232c.56 0 .768.256.976.8 1.072 2.976 2.896 5.568 3.584 5.568.256 0 .384-.112.384-.736v-2.656c0-.8-.224-1.152-1.088-1.248-.48-.048-.192-1.088.544-1.088h2.096c.704 0 .96.352.96 1.168v2.32c0 .256.112.336.464.336.272 0 .528-.144.752-.384 1.136-1.328 2.064-3.152 2.064-3.44 0-.16.064-.32.448-.32h1.232c.704 0 .848.352.688.832-.576 1.936-2.096 4.336-2.288 4.608-.432.576-.288.752 0 1.136.688.88 1.488 1.84 1.616 2.096.176.32-.08.672-.848.672z"/></svg>
+                        <span>VK ID</span>
+                    </a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <script src="{{ url_for('static', filename='autosize.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

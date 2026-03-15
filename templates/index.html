@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="hero-content">
+        <h1 class="hero-title">Калашников Андрей<br><span class="highlight">Михайлович</span></h1>
+        <p class="hero-subtitle">Программная инженерия, 2 курс</p>
+        <p class="hero-desc">
+            Студент СПбГУ Математико-механического факультета Программной инженерии. 
+            Изучаю различные языки (C/Kotlin/Python/Go) и участвую в разработке open-source проектов
+        </p>
+        
+        <div class="social-links">
+            <a href="mailto:andrey_kalashnikov_am@list.ru" class="social-btn email">Email</a>
+            <a href="https://t.me/kalash0_0" class="social-btn telegram">Telegram</a>
+            <a href="https://github.com/ilq1" class="social-btn github">GitHub</a>
+        </div>
+    </div>
+    
+    <div class="hero-image-wrapper">
+        <img src="{{ url_for('static', filename='photo.jpg') }}" alt="Фото профиля" class="hero-image">
+    </div>
+</div>
+
+<div class="content-layout">
+    <section class="projects-section">
+        <div class="section-header">
+            <h2 class="section-title">Портфолио</h2>
+            <div class="section-line"></div>
+        </div>
+        
+        <div class="projects-container">
+            {% for project in projects %}
+                <a href="{{ project.repo_url }}" target="_blank" class="project-card">
+                    <div class="card-top">
+                        <span class="project-type">Project</span>
+                        <div class="project-icon">↗</div>
+                    </div>
+                    <h3 class="project-name">{{ project.name }}</h3>
+                    {% if project.description %}
+                        <p class="project-description">{{ project.description }}</p>
+                    {% endif %}
+                    <p class="project-meta">GitHub Repository</p>
+                </a>
+            {% else %}
+                <div class="empty-state">Проектов пока нет.</div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="comments-section">
+        <div class="section-header">
+            <h2 class="section-title">Комментарии</h2>
+        </div>
+
+        {% if session.get('user') %}
+            <form action="{{ url_for('add_comment') }}" method="POST" class="modern-form" id="comment-form">
+                <div class="input-group">
+                    <textarea name="content" rows="1" placeholder="Что думаете?" required id="comment-content"></textarea>
+                    <div class="form-footer">
+                        <button type="submit" class="send-btn">Отправить</button>
+                    </div>
+                </div>
+            </form>
+        {% else %}
+            <div class="auth-prompt">
+                <p>Войдите, чтобы написать сообщение</p>
+            </div>
+        {% endif %}
+        
+        <div class="comments-feed" id="comments-feed">
+            {% for comment in comments %}
+                <div class="comment-bubble">
+                    <div class="comment-header">
+                        <div class="author-avatar">{{ comment.author.username[:1] }}</div>
+                        <div class="author-info">
+                            <span class="author-name">{{ comment.author.username }}</span>
+                            <span class="comment-date">{{ comment.created_at.strftime('%d.%m, %H:%M') }}</span>
+                        </div>
+                    </div>
+                    <div class="comment-body">
+                        {{ comment.content }}
+                    </div>
+                </div>
+            {% else %}
+                <p class="no-comments" id="no-comments-placeholder">Сообщений пока нет.</p>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('comment-form');
+    const feed = document.getElementById('comments-feed');
+    const textarea = document.getElementById('comment-content');
+
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const content = textarea.value.trim();
+            if (!content) return;
+
+            const formData = new FormData(form);
+
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            })
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
+
+                // Удаляем плейсхолдер "Сообщений пока нет", если он есть
+                const placeholder = document.getElementById('no-comments-placeholder');
+                if (placeholder) placeholder.remove();
+
+                // Создаем новый элемент комментария
+                const commentDiv = document.createElement('div');
+                commentDiv.className = 'comment-bubble';
+                
+                const header = document.createElement('div');
+                header.className = 'comment-header';
+
+                const avatar = document.createElement('div');
+                avatar.className = 'author-avatar';
+                avatar.textContent = data.author.username.substring(0, 1);
+
+                const info = document.createElement('div');
+                info.className = 'author-info';
+                
+                const authorSpan = document.createElement('span');
+                authorSpan.className = 'author-name';
+                authorSpan.textContent = data.author.username;
+                
+                const dateSpan = document.createElement('span');
+                dateSpan.className = 'comment-date';
+                dateSpan.textContent = data.created_at;
+
+                info.appendChild(authorSpan);
+                info.appendChild(dateSpan);
+                
+                header.appendChild(avatar);
+                header.appendChild(info);
+                
+                const body = document.createElement('div');
+                body.className = 'comment-body';
+                body.textContent = data.content;
+                
+                commentDiv.appendChild(header);
+                commentDiv.appendChild(body);
+
+                // Добавляем в начало списка
+                feed.insertBefore(commentDiv, feed.firstChild);
+
+                // Очищаем форму
+                form.reset();
+                // Сбрасываем высоту textarea (для autosize.js)
+                textarea.style.height = 'auto';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Произошла ошибка при отправке комментария. Попробуйте войти снова.');
+            });
+        });
+    }
+});
+</script>
+{% endblock %}
