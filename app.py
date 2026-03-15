@@ -27,17 +27,14 @@ github = oauth.register(
     client_kwargs={'scope': 'user:email'},
 )
 
-# VK
-vk = oauth.register(
-    name='vk',
-    client_id=os.environ.get('VK_CLIENT_ID', 'DUMMY_VK_ID'),
-    client_secret=os.environ.get('VK_CLIENT_SECRET', 'DUMMY_VK_SECRET'),
-    access_token_url='https://oauth.vk.com/access_token',
-    access_token_params=None,
-    authorize_url='https://oauth.vk.com/authorize',
-    authorize_params=None,
-    api_base_url='https://api.vk.com/method/',
-    client_kwargs={'scope': 'email'},
+# Yandex
+yandex = oauth.register(
+    name='yandex',
+    client_id=os.environ.get('YANDEX_CLIENT_ID', 'DUMMY_YANDEX_ID'),
+    client_secret=os.environ.get('YANDEX_CLIENT_SECRET', 'DUMMY_YANDEX_SECRET'),
+    access_token_url='https://oauth.yandex.ru/token',
+    authorize_url='https://oauth.yandex.ru/authorize',
+    api_base_url='https://login.yandex.ru/',
 )
 
 # Модель пользователя
@@ -107,25 +104,12 @@ def authorize(provider_name):
         provider_id = str(user_info.get('id'))
         username = user_info.get('login')
         email = user_info.get('email')
-    elif provider_name == 'vk':
-
-        email = token.get('email')
-        user_id = token.get('user_id')
-        access_token = token.get('access_token')
-        
-        
-        resp = client.get('users.get', params={'access_token': access_token, 'v': '5.131'})
-        data = resp.json()
-        
-        if 'response' in data and len(data['response']) > 0:
-            user_data = data['response'][0]
-            first = user_data.get('first_name', '')
-            last = user_data.get('last_name', '')
-            username = f"{first} {last}".strip()
-        else:
-            username = f"VK User {user_id}"
-            
-        provider_id = str(user_id)
+    elif provider_name == 'yandex':
+        resp = client.get('info?format=json')
+        user_info = resp.json()
+        provider_id = str(user_info.get('id'))
+        username = user_info.get('real_name') or user_info.get('display_name') or user_info.get('login')
+        email = user_info.get('default_email')
 
     user = User.query.filter_by(provider=provider_name, provider_id=provider_id).first()
     if not user:

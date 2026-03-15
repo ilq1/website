@@ -97,15 +97,16 @@ header h1 {
     box-shadow: 0 4px 12px rgba(36, 41, 46, 0.3);
 }
 
-.btn-vk {
-    background-color: #0077FF;
-    color: white !important;
+.btn-yandex {
+    background-color: #ffffff;
+    color: #000000 !important;
+    border: 1px solid var(--border);
 }
 
-.btn-vk:hover {
-    background-color: #0066CC;
+.btn-yandex:hover {
+    background-color: #f5f5f5;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 119, 255, 0.3);
+    box-shadow: var(--shadow);
 }
 
 .btn-logout {
